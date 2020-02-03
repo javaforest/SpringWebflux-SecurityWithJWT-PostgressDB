@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+
 @RestController
 public class UserController {
     @Autowired
@@ -21,6 +23,6 @@ public class UserController {
 
     @RequestMapping(value = "/adduser", method = RequestMethod.GET)
     public Mono<Userdata> addUser(){
-       return  userService.addUpdateUser(new Userdata(null, "Mahade","hassan", "12345", "mahade.hasan68@gmail.com","Bd, Khustia"));
+       return  userService.addUpdateUser(new Userdata(null, "Mahade","hassan", "12345", "mahade.hasan68@gmail.com","Bd, Khustia", Arrays.asList("USER")));
     }
 }
