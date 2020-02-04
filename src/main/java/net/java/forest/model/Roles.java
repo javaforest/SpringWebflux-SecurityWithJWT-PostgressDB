@@ -1,5 +1,5 @@
 package net.java.forest.model;
 
-public enum Role {
+public enum Roles {
     ROLE_USER, ROLE_ADMIN
 }

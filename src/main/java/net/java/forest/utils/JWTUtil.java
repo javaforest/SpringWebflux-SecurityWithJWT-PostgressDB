@@ -1,10 +1,5 @@
-package net.java.forest.security;
+package net.java.forest.utils;
 
-import java.io.Serializable;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,20 +7,27 @@ import net.java.forest.model.Userdata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JWTUtil implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Value("${springbootwebfluxjjwt.jjwt.secret}")
+	@Value("${springbootwebflux.jjwt.secret}")
 	private String secret;
 	
-	@Value("${springbootwebfluxjjwt.jjwt.expiration}")
+	@Value("${springbootwebflux.jjwt.expiration}")
 	private String expirationTime;
-	
 	public Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+		return Jwts.parser()
+				.setSigningKey(DatatypeConverter.parseBase64Binary(secret))
+				.parseClaimsJws(token).getBody();
 	}
 	
 	public String getUsernameFromToken(String token) {
@@ -57,7 +59,7 @@ public class JWTUtil implements Serializable {
 				.setSubject(username)
 				.setIssuedAt(createdDate)
 				.setExpiration(expirationDate)
-				.signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes()))
+				.signWith(new SecretKeySpec(DatatypeConverter.parseBase64Binary(secret), SignatureAlgorithm.HS256.getJcaName()))
 				.compact();
 	}
 	

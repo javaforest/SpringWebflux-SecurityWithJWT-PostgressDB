@@ -1,7 +1,8 @@
 package net.java.forest.security;
 
 import io.jsonwebtoken.Claims;
-import net.java.forest.model.Role;
+import net.java.forest.model.Roles;
+import net.java.forest.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,10 +16,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class AuthenticationManager implements ReactiveAuthenticationManager {
-
 	@Autowired
-	private  JWTUtil jwtUtil;
-	
+	private JWTUtil jwtUtil;
 	@Override
 	@SuppressWarnings("unchecked")
 	public Mono<Authentication> authenticate(Authentication authentication) {
@@ -33,9 +32,9 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 		if (username != null && jwtUtil.validateToken(authToken)) {
 			Claims claims = jwtUtil.getAllClaimsFromToken(authToken);
 			List<String> rolesMap = claims.get("role", List.class);
-			List<Role> roles = new ArrayList<>();
+			List<Roles> roles = new ArrayList<>();
 			for (String rolemap : rolesMap) {
-				roles.add(Role.valueOf(rolemap));
+				roles.add(Roles.valueOf(rolemap));
 			}
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 				username,

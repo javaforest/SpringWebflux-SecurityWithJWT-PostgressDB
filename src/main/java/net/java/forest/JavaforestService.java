@@ -1,6 +1,8 @@
 package net.java.forest;
 
 import lombok.extern.slf4j.Slf4j;
+import net.java.forest.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +20,8 @@ import java.util.stream.BaseStream;
 @Slf4j
 @SpringBootApplication
 public class JavaforestService {
+	@Autowired
+	private UserRepository userRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(JavaforestService.class, args);
@@ -28,11 +32,7 @@ public class JavaforestService {
 		return args -> getSchema()
 			.flatMap(sql -> executeSql(client, sql))
 			.doOnSuccess(count -> log.info("Schema created, rows updated: {}", count))
-			/*.then(repository.deleteAll())
-			.doOnSuccess(v -> log.info("Repository cleared"))
-			.thenMany(getPeople())
-			.flatMap(repository::save)*/
-			.subscribe(person -> log.info("Person saved: {}", person));
+			.subscribe(schema -> log.info("schema saved: {}", schema));
 	}
 
 

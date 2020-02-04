@@ -2,8 +2,6 @@ package net.java.forest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,10 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * User model
+ */
 public class Userdata implements UserDetails {
     @Id
     private Long id;
@@ -25,11 +27,12 @@ public class Userdata implements UserDetails {
     @NotBlank(message = "Password should not be empty")
     private String password;
     @Email(message = "Invalid email address")
-    @UniqueElements(message = "Should be unique")
+    //@UniqueElements(message = "Should be unique")
     private String email;
+    @NotBlank(message = "Address should not be empty")
     private String address;
-    @NotBlank(message = "Roles should not be empty")
-    private List<String> roles;
+    @NotEmpty( message = "Roles should not be empty")
+    private List<@NotBlank(message = "Role should not be empty")String> roles;
     private Boolean enabled;
 
     public Userdata(Long id, String firstName, String lastName, String password, String email, String address, List<String> roles ) {
@@ -104,7 +107,6 @@ public class Userdata implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return this.roles.stream().map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
     }
 
@@ -162,6 +164,7 @@ public class Userdata implements UserDetails {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", roles=" + roles +
+                ", enabled=" + enabled +
                 '}';
     }
 }

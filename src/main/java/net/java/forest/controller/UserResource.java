@@ -1,6 +1,5 @@
 package net.java.forest.controller;
 
-import net.java.forest.model.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,28 +11,26 @@ import java.security.Principal;
 
 
 @RestController
-public class ResourceREST {
+public class UserResource {
 
+	/**
+	 * Endpoint for all user
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public Mono<ResponseEntity<?>> publicUser(Principal principal) {
-		return Mono.just(ResponseEntity.ok(new Message(principal.toString())));
+		return Mono.just(ResponseEntity.ok(principal.toString()));
 	}
-	
+
+	/**
+	 * Authorized endpoint for 'USER' type user
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "/resource/user", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
 	public Mono<ResponseEntity<?>> user(Principal principal) {
-		return Mono.just(ResponseEntity.ok(new Message(principal.toString())));
-	}
-	
-	@RequestMapping(value = "/resource/admin", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ADMIN')")
-	public Mono<ResponseEntity<?>> admin() {
-		return Mono.just(ResponseEntity.ok(new Message("Content for admin")));
-	}
-	
-	@RequestMapping(value = "/resource/user-or-admin", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Mono<ResponseEntity<?>> userOrAdmin() {
-		return Mono.just(ResponseEntity.ok(new Message("Content for user or admin")));
+		return Mono.just(ResponseEntity.ok(principal.toString()));
 	}
 }
