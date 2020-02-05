@@ -69,16 +69,4 @@ public class LoginSignup {
             return Mono.just(ResponseEntity.badRequest().body(message));
         }
     }
-
-    /*private <T> String validation(T t) {
-        log.info(t.toString());
-        Iterator<ConstraintViolation<T>> it = validator.validate(t).iterator();
-        String message = "";
-        while (it.hasNext()) {
-            ConstraintViolation<T> constraintViolation = it.next();
-            log.info("Error message : {}", constraintViolation.getMessage());
-            message += constraintViolation.getMessage() + "\n";
-        }
-        return message;
-    }*/
 }
